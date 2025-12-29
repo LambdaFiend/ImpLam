@@ -221,9 +221,34 @@ reduceMultiple term n
 
 etaReductionSearch :: Term -> Term
 etaReductionSearch (Abstraction term1 term2) = etaReductionApply term2 term1
-etaReductionSearch term@(Application term1 term2) = Application (etaReductionSearch term1) (etaReductionSearch term2)
+etaReductionSearch term@(Application term1 term2) =
+  let term1' = etaReductionSearch term1
+      term2' = etaReductionSearch term2
+   in Application term1' term2'
 etaReductionSearch term = term
 
 etaReductionApply :: Term -> Term -> Term
 etaReductionApply (Application term2 (Variable _ 1)) _ = term2
-etaReductionApply term1 term2 = Abstraction term2 term1
+etaReductionApply term1 term = Abstraction term term1
+
+chainEtaReductionSearch :: Term -> [Term] -> Term
+chainEtaReductionSearch (Abstraction term1 term2) terms = chainEtaReductionSearch term2 $ (term1:terms)
+chainEtaReductionSearch (Application term1 term2) [] =
+  let term1' = chainEtaReductionSearch term1 []
+      term2' = chainEtaReductionSearch term2 []
+   in Application term1' term2'
+chainEtaReductionSearch term@(Application term1 term2) terms = chainEtaReductionApply term $ reverse terms
+chainEtaReductionSearch term _ = term
+
+chainEtaReductionApply :: Term -> [Term] -> Term
+chainEtaReductionApply term [] = term
+chainEtaReductionApply (Application term1 (Variable _ index)) (term:terms)
+  | index == length (term:terms) =
+    let term1' =
+          if (terms /= [])
+            then term1
+            else chainEtaReductionSearch term1 []
+     in chainEtaReductionApply term1' terms
+chainEtaReductionApply term1 terms =
+  let term1' = chainEtaReductionSearch term1 []
+   in foldr Abstraction term1' terms
