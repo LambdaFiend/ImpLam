@@ -1,6 +1,6 @@
 # ImpLam
 
-Impure Lambda (as of yet, it's totally pure! the name sounds evil, Imp could mean impure, improved, imperfect, whatever! It's versatile, uncompromising, I like it!)
+Impure Lambda (as of yet, it's totally pure! the name sounds evil, it could suggest impure, improved, imperfect, whatever! It's versatile, uncompromising, sometimes truthful - I like it!)
 
 # Purpose
 
