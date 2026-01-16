@@ -382,40 +382,71 @@ I do not intend to explain why they are as they are. The defenitions could prove
 In any case, I'll give you some hints so that the digestion is not so arduous.
 
 Booleans:
+
 True picks the first "statement" whereas False picks the second, as such is shown below. Truth tables will give you a hand.
 
 IF % \fpq.f p q
+
 TRUE % \pq.p
+
 FALSE % \pq.q
+
 AND % \pq.p q FALSE
+
 OR % \pq.p
+
 NOT % \p.p FALSE TRUE
 
+
 Pairs:
+
+The idea here is such that (PAIR a b) packs both a and b, by leaving f abstracted, which will eventually be substituted by either TRUE or FALSE.
+
 PAIR % \xyf.fxy
+
 FST % \p.p TRUE
+
 SND % \p.p FALSE
 
+
 Church Numerals:
+
+Good luck! Induction invites fun! (see what I did there?)
+
 SUC % \nfx.f (n f x)
+
 ADD % \nmfx.n f (m f x)
+
 ADD' % \nm.n SUC m
+
 MULT % \nmfx.n (m f) x
+
 MULT' % \nmf.n (m f)
+
 EXP % \mn.nm
+
 EXP' % \nm.m (MULT n) C1
+
 ISZERO % \n.n (\x.FALSE) TRUE
 
+
 Wisdom Tooth Trick (blessed be Kleene's gums!):
+
+The trick is that we start at the bottom (0 or x) and build up n successors, but only for the first element of a pair which initially holds equal numerals. Then, once we've done this n times, the result will be a pair (Cn, Cn-1), such that if we pick the second element, we get Cn-1. It's not as confusing once you understand it!
+
 PREFN % \p.PAIR (SUC (FST p)) (FST p)
+
 PRE % \n.SND (n PREDFN (PAIR C0 C0))
+
 PRE' % \nfx.SND (n (PREDFN f) (PAIR x x))
+
 SUB % \nm.n PRED m
 
 Psst! If you're learning the ropes, try proving by induction on n that (ADD Cn Cm) and (ADD' Cn Cm) will always result in Cn+m. It's a simple proof, great for an icebreaker!
 Maybe I'll use it for an example! Or maybe something else.
 
 Lists:
+
 TBD.
 
 ## Y Combinator and Recursion
