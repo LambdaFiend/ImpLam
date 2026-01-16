@@ -6,7 +6,7 @@ Impure Lambda (as of yet, it's totally pure!)
 
 I'm not sure yet what this repository is for.
 
-I'm thinking of using it for my studies, as a tool which will help me efficiently process and verify and information. Also great for learning by doing.
+I'm thinking of using it for my studies, as a tool which will help me efficiently process and verify data. Also great for learning by doing.
 
 # Info
 
@@ -24,7 +24,9 @@ Then run Main (./Main, for example)
 
 ## Quick note
 
-The symbol \ will be used in place of the symbol λ (lambda symbol).
+The symbol \ will be used in place of the symbol λ (lambda symbol). The only reason I do this is so that it matches the way most people can comfortably create lambda terms using the defined syntax for ImpLam.
+
+The symbol λ is Lambda.
 
 The symbol β is Beta.
 
@@ -33,6 +35,8 @@ The symbol α is Alpha.
 The symbol η is Eta.
 
 The symbol ω is Omega.
+
+The symbol Ω is Big Omega.
 
 The symbol % will be used for describing the relation "is identical to" (modulo symbol).
 
@@ -139,9 +143,9 @@ Now, regarding the Eta reduction, it must come as natural that whenever in:
 
 (\x.Mx)
 
-x does not occur in M as a free variable (this will be explained further in this README), we can simply do the following:
+x does not occur in M as a free variable (this will be explained further into this README), we can simply do the following:
 
-(\x.Mx) ->η Mx
+(\x.Mx) ->η M
 
 The reason this can be accomplished, is that the only purpose of x was to be applied to M, and if we ever apply anything to:
 
@@ -251,9 +255,9 @@ If you keep reducing it, you get:
 
 (lk)y % lky
 
-For those who know, this is the same as call-by-name evaluation.
+For those who know, this is the same as call-by-name evaluation (non-strict)
 
-Now, when it comes to Applicative Order of Reduction, which is the same as call-by-value evaluation, it's when you reduce the leftmost, innermost application before any other. 
+Now, when it comes to Applicative Order of Reduction, which is the same as call-by-value evaluation (strict), it's when you reduce the leftmost, innermost application before any other. 
 
 Therefore, Applicative Order of Reduction is as follows:
 
@@ -283,11 +287,13 @@ In conclusion, you may want to pick Applicative Order of Reduction if you're loo
 
 If you really want to make sure a Lambda Term really does not terminate, try proving it via induction proof! It's the best, and will likely suit the problem at hand!
 
-## A Couple of Somewhat Interesting Lambda Terms 
+## A Couple of some Interesting Lambda Terms 
 
 By the way, the term:
 
-ω % (\x.xx)(\x.xx)
+ω % \x.xx
+
+Ω % (\x.xx)(\x.xx)
 
 Is generally known as Omega. It never changes it's form no matter how you attempt to reduce it. There's only one possible reduction anyway, so this is easy to confirm.
 
@@ -355,31 +361,66 @@ And so on. It should come as natural that the properties and rules are verified 
 ## Church Numerals (encoding of numbers)
 
 Basically:
-0 % \fx.x
-1 % \fx.fx
+C0 % \fx.x
+C1 % \fx.fx
 ...
-n % \fx.(f^n)x % \fx.f...fx
+Cn % \fx.(f^n)x % \fx.f...fx
 
 Such that for n, f is applied n times to x, one after another!
 
+We will use Cn to denote the Church Numeral of n (as already shown).
+
 Functions for addition, subtraction, successor, exponentiation, etc can be created!
 
-Lambda Calculus is Turing Complete, therefore what can be computed, will be describeable in Lambda Calculus! (as long as it's untyped, in which case it becomes total but no longer is Turing Complete; there are perks to this nonetheless).
+Lambda Calculus is Turing Complete, therefore what can be computed, will be describeable in Lambda Calculus! (unless it's typed, in which case it becomes total and ceases to be Turing Complete; there are perks to this).
 I might talk a little about this on a later topic.
 
 
 ## Encoding of various other structures (such as lists, booleans, pairs, etc)
 
-I will not write this extensively (as I have not done so for Church Numerals) as I'm running out of time as of the moment of writing this. Some very short examples (sorry, I need sleep):
+I do not intend to explain why they are as they are. The defenitions could prove useful for the future (so that I do not have to rewrite them then) and for anyone who needs it until then.
+In any case, I'll give you some hints so that the digestion is not so arduous.
 
-true % \xy.x
-false % \xy.y
-if % \fxy.fxy
+Booleans:
+True picks the first "statement" whereas False picks the second, as such is shown below. Truth tables will give you a hand.
 
+IF % \fpq.f p q
+TRUE % \pq.p
+FALSE % \pq.q
+AND % \pq.p q FALSE
+OR % \pq.p
+NOT % \p.p FALSE TRUE
+
+Pairs:
+PAIR % \xyf.fxy
+FST % \p.p TRUE
+SND % \p.p FALSE
+
+Church Numerals:
+SUC % \nfx.f (n f x)
+ADD % \nmfx.n f (m f x)
+ADD' % \nm.n SUC m
+MULT % \nmfx.n (m f) x
+MULT' % \nmf.n (m f)
+EXP % \mn.nm
+EXP' % \nm.m (MULT n) C1
+ISZERO % \n.n (\x.FALSE) TRUE
+
+Wisdom Tooth Trick (blessed be Kleene's gums!):
+PREFN % \p.PAIR (SUC (FST p)) (FST p)
+PRE % \n.SND (n PREDFN (PAIR C0 C0))
+PRE' % \nfx.SND (n (PREDFN f) (PAIR x x))
+SUB % \nm.n PRED m
+
+Psst! If you're learning the ropes, try proving by induction on n that (ADD Cn Cm) and (ADD' Cn Cm) will always result in Cn+m. It's a simple proof, great for an icebreaker!
+Maybe I'll use it for an example! Or maybe something else.
+
+Lists:
+TBD.
 
 ## Y Combinator and Recursion
 
-I will explain this one sometime soon. In anycase, here's its definition:
+I will explain this one sometime soon. In anycase, here's its (Y Combinator's) definition:
 
 Y % \f.(\x.f(xx))(\x.f(xx))
 
@@ -387,26 +428,47 @@ It's meant to receive a "function" and substitute it there. It will allow for th
 
 Y F % F (Y F)
 
-Don't forget that the spaces are redundant, this is the same as what's above:
+Don't forget that the spaces are not necessary; this is the same as what's above:
 
-YF % FYF
+YF % F(YF)
+
+In order to be able to use it, one should employ normal order reduction.
+Notice that:
+
+YF % (\f.(\x.f(xx))(\x.f(xx))) F ->β (\x.F(xx))(\x.F(xx)) ->β F((\x.F(xx))(\x.F(xx))
+
+Now, assuming F is not in β normal form (if it were, there would be no βNF), we would have to proceed (as we have until now) with the outermost reduction, that is, apply F to the new YF which has been produced. That's why all recursive terms which rely on Y Combinator require you to have as the outermost abstraction (usually written as "h" or "g") to be reserved for the following YF. (also note that YF is one beta reduction/expansion away from (\x.F(xx))(\x.F(xx))) (beta expansion is the opposite of a reduction). Today I'm parentheses spirited, it seemeth.
+
+I will show two terms where the Y Combinator - that is, recursion - is used:
+
+Factorial definition:
+FACT % Y \hn.if (ISZERO n)
+                C1
+                (MULT n (h (PRED n)))
+
+A recursive version of equals for church numerals:
+equals' % \hnm.if (or (ISZERO n) (ISZERO m))
+                  (and (ISZERO n) (ISZERO m))
+                  (h (PRED n) (PRED m))
+
+In case you're not familiar with iszero, mult or pred, I suggest you take a look at the encodings I gave. It will be all the more worthwhile if you read actual didactic documents. It's worth it to understand how these terms come to be.
 
 ## Typing, Turing Completeness, Total Lambda Calculus, etc OVERVIEW ONLY
 
-Complicated and takes a while to think through how not to extend myself too far (also in order to avoid spouting nonsense).
+Complicated and takes a while to think through how not to extend myself too far (also (and mainly, really) in order to avoid spouting nonsense).
+Update: Maybe I won't include this. Either that, or further simplification is on the way.
 
 # What is to be done (very much generally speaking)
-Eta Reductions (should be quick)
 
-The interface should be intuitive enough, although totally unappealing and forcing. In any case, the interface will be grealy improved sometime.
+The interface should be intuitive enough, although totally unappealing and forcing. In any case, it shall be grealy improved, sometime.
 
-Currently, the only form of reducing is not the most efficient one (it runs the AST for each reduction!). The optimization will only cover cases when you only want to see printed the Normal Form (final result).
+Currently, the only form of reducing is not the most efficient one (It runs the whole AST for each reduction! Is there a better method?). The optimization will only cover cases when you only want to see printed the Normal Form (final result) (hopefully this is possible, although I'm a little skeptical considering lambda calculus has some (super serious) trouble defining reductions as atomic operations computationally).
 
-Soon, I'll add a chain reducing function (only traverses teh AST once).
+Thus, soon I'll be adding a chain reducing function (only traverses the AST once).
 
 I will also add a way of showing whether it was an eta or a beta reduction done for each step.
 
 Many other improvements will be made, for example environment variables and libraries.
 
-More control and flexibility for the interface. And so on...
+More control and flexibility for the interface. And so on... This might take a while, I'll be rather busy until summer's here.
 
