@@ -1,6 +1,6 @@
-# ImpLam
+# Lambda Calculus Interpreter
 
-Impure Lambda (as of yet, it's totally pure! the name sounds evil, it could suggest that it's impure, improved, imperfect, whatever! It's versatile, uncompromising, sometimes truthful - I like it!)
+Lambda Calculus Interpreter
 
 # Purpose
 
