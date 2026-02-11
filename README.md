@@ -442,10 +442,17 @@ PRE' % \nfx.SND (n (PREDFN f) (PAIR x x))
 
 SUB % \nm.n PRED m
 
-Psst! If you're learning the ropes, try proving by induction on n that (ADD Cn Cm) and (ADD' Cn Cm) will always result in Cn+m. It's a simple proof, great for an icebreaker!
-Maybe I'll use it for an example! Or maybe something else.
-
 Lists:
+
+NIL % \z.z
+
+CONS % \xy.PAIR FALSE (PAIR x y)
+
+ISNIL % FST
+
+HEAD % \z.FST (SND z)
+
+TAIL % \z.SND (SND z)
 
 TBD.
 
@@ -483,11 +490,6 @@ equals' % \hnm.if (or (ISZERO n) (ISZERO m))
                   (h (PRED n) (PRED m))
 
 In case you're not familiar with iszero, mult or pred, I suggest you take a look at the encodings I gave. It will be all the more worthwhile if you read actual didactic documents. It's worth it to understand how these terms come to be.
-
-## Typing, Turing Completeness, Total Lambda Calculus, etc OVERVIEW ONLY
-
-Complicated and takes a while to think through how not to extend myself too far (also (and mainly, really) in order to avoid spouting nonsense).
-Update: Maybe I won't include this. Either that, or further simplification is on the way.
 
 # What is to be done (very much generally speaking)
 
